@@ -305,7 +305,10 @@ export default class WaveSurfer extends util.Observer {
         xhr: {}
     };
 
-    /** @private */
+    /**
+     * 获取音频的不同实现方式
+     * @private
+     * */
     backends = {
         MediaElement,
         WebAudio,
@@ -477,6 +480,7 @@ export default class WaveSurfer extends util.Observer {
         ) {
             this.params.backend = 'MediaElement';
         }
+        // Backend有多种实现
         this.Backend = this.backends[this.params.backend];
 
         /**
@@ -1271,6 +1275,7 @@ export default class WaveSurfer extends util.Observer {
      * @emits WaveSurfer#redraw
      */
     drawBuffer() {
+        // 音频时长*每秒最小像素*像素比
         const nominalWidth = Math.round(
             this.getDuration() *
                 this.params.minPxPerSec *
@@ -1292,6 +1297,8 @@ export default class WaveSurfer extends util.Observer {
         }
 
         let peaks;
+        // debugger
+        // 部分渲染的逻辑
         if (this.params.partialRender) {
             const newRanges = this.peakCache.addRangeToPeakCache(
                 width,
@@ -1312,7 +1319,10 @@ export default class WaveSurfer extends util.Observer {
                     newRanges[i][1]
                 );
             }
-        } else {
+        }
+        // 全部渲染逻辑
+        else {
+            // 获得peak数据
             peaks = this.backend.getPeaks(width, start, end);
             this.drawer.drawPeaks(peaks, width, start, end);
         }

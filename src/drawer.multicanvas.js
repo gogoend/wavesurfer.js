@@ -345,6 +345,7 @@ export default class MultiCanvas extends Drawer {
      * @returns {void}
      */
     drawWave(peaks, channelIndex, start, end) {
+        // 绘制波形
         return this.prepareDraw(
             peaks,
             channelIndex,
@@ -478,12 +479,16 @@ export default class MultiCanvas extends Drawer {
      * @returns {void}
      */
     prepareDraw(peaks, channelIndex, start, end, fn, drawIndex, normalizedMax) {
+        // 这里是requestAnimationFrame里的逻辑
         return util.frame(() => {
             // Split channels and call this function with the channelIndex set
+            // 分离通道走这里
             if (peaks[0] instanceof Array) {
                 const channels = peaks;
 
+                // 如果设置了splitChannels选项
                 if (this.params.splitChannels) {
+                    //找到非隐藏的通道
                     const filteredChannels = channels.filter((c, i) => !this.hideChannel(i));
                     if (!this.params.splitChannelsOptions.overlay) {
                         this.setHeight(
@@ -499,14 +504,16 @@ export default class MultiCanvas extends Drawer {
                         overallAbsMax = util.max(channels.map((channelPeaks => util.absMax(channelPeaks))));
                     }
 
-
+                    // 这里每个通道各自画波形
                     return channels.forEach((channelPeaks, i) =>
                         this.prepareDraw(channelPeaks, i, start, end, fn, filteredChannels.indexOf(channelPeaks), overallAbsMax)
                     );
                 }
+                // 如果没有设置splitChannels选项选项，那就直接取第一个通道的数据
                 peaks = channels[0];
             }
 
+            // 隐藏通道就不画了
             // Return and do not draw channel peaks if hidden.
             if (this.hideChannel(channelIndex)) {
                 return;

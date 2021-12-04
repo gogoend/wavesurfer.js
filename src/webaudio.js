@@ -414,9 +414,11 @@ export default class WebAudio extends util.Observer {
      * peaks consisting of (max, min) values for each subrange.
      */
     getPeaks(length, first, last) {
+        // 如果有peaks则直接返回peaks
         if (this.peaks) {
             return this.peaks;
         }
+        // 如果没有传入buffer则直接返回空数组
         if (!this.buffer) {
             return [];
         }
@@ -424,8 +426,12 @@ export default class WebAudio extends util.Observer {
         first = first || 0;
         last = last || length - 1;
 
+        // 初始化：
+        // mergedPeaks为长度为2 * length的空数组，然后将倒数第一、第二个索引的值设为0
+        // splitPeaks为一个二维数组，其中每个通道对应了一个长度为2 * length的子（空）数组，然后将每个子数组倒数第一、第二个索引的值设为0
         this.setLength(length);
 
+        // 所以为什么这里还要再判断一次呢？
         if (!this.buffer) {
             return this.params.splitChannels
                 ? this.splitPeaks
@@ -444,13 +450,19 @@ export default class WebAudio extends util.Observer {
             this.buffer = newBuffer.buffer;
         }
 
+        // 采样大小 = 音频数据的长度/视口宽度
         const sampleSize = this.buffer.length / length;
+        // 采样步数
         const sampleStep = ~~(sampleSize / 10) || 1;
+        // 声道数
         const channels = this.buffer.numberOfChannels;
+        // 声道索引
         let c;
 
+        // 这里在遍历各个声道
         for (c = 0; c < channels; c++) {
             const peaks = this.splitPeaks[c];
+            // 分别拿两个声道的数据
             const chan = this.buffer.getChannelData(c);
             let i;
 
@@ -492,6 +504,7 @@ export default class WebAudio extends util.Observer {
             }
         }
 
+        // 返回各声道分别的的峰值数组还是返回经过声道合并的峰值
         return this.params.splitChannels ? this.splitPeaks : this.mergedPeaks;
     }
 

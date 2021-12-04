@@ -323,6 +323,7 @@ export default class CanvasEntry {
 
     /**
      * Render the actual waveform line on a `canvas` element
+     * CanvasContext 相关API都在此被调用
      *
      * @param {CanvasRenderingContext2D} ctx Rendering context of target canvas
      * @param {number[]} peaks Array with peaks data
@@ -339,6 +340,7 @@ export default class CanvasEntry {
             return;
         }
 
+        // length是peaks数组长度的一半
         const length = peaks.length / 2;
         const first = Math.round(length * this.start);
 
@@ -362,13 +364,15 @@ export default class CanvasEntry {
             halfOffset - Math.round((peaks[2 * canvasStart] || 0) / absmaxHalf)
         );
 
+        // 绘制波形的上半部分
         let i, peak, h;
         for (i = canvasStart; i < canvasEnd; i++) {
             peak = peaks[2 * i] || 0;
-            h = Math.round(peak / absmaxHalf);
+            h = Math.round(peak / absmaxHalf); // 这个应该是高度
             ctx.lineTo((i - first) * scale + this.halfPixel, halfOffset - h);
         }
 
+        // 上半部分绘制结束后，从后面绕过来继续绘制下半部分
         // draw the bottom edge going backwards, to make a single
         // closed hull to fill
         let j = canvasEnd - 1;
@@ -384,6 +388,7 @@ export default class CanvasEntry {
             Math.round((peaks[2 * canvasStart + 1] || 0) / absmaxHalf)
         );
 
+        // 下半部分绘制结束后，关闭路径，并填色
         ctx.closePath();
         ctx.fill();
     }

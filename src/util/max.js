@@ -1,5 +1,6 @@
 /**
  * Get the largest value
+ * 返回对象中某个key对应的最大值
  *
  * @param   {Array} values Array of numbers
  * @returns {Number} Largest number found

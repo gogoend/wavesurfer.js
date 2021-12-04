@@ -1,5 +1,6 @@
 /**
  * Returns a number limited to the given range.
+ * 返回一个被钳制在min、max范围内的值
  *
  * @param {number} val The number to be limited to a range
  * @param {number} min The lower boundary of the limit range

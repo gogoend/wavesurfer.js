@@ -7,6 +7,7 @@
 
 /**
  * Observer class
+ * 一个类似EventTarget的类
  */
 export default class Observer {
     /**

@@ -3,6 +3,7 @@ import utilmin from './min';
 
 /**
  * Get the largest absolute value in an array
+ * 获得数组中绝对值最大的数值
  *
  * @param   {Array} values Array of numbers
  * @returns {Number} Largest number found

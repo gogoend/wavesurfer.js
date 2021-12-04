@@ -1,5 +1,6 @@
 /**
  * Get a random prefixed ID
+ * 获得一个随机、带前缀的id
  *
  * @param {String} prefix Prefix to use. Default is `'wavesurfer_'`.
  * @returns {String} Random prefixed ID

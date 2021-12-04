@@ -3,6 +3,7 @@ import reqAnimationFrame from './request-animation-frame';
 /**
  * Create a function which will be called at the next requestAnimationFrame
  * cycle
+ * 创建一个在下次requestAnimationFrame循环中将会被调用的函数
  *
  * @param {function} func The function to call
  *

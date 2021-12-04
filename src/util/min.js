@@ -1,5 +1,6 @@
 /**
  * Get the smallest value
+ * 返回对象中某个key对应的最小值
  *
  * @param   {Array} values Array of numbers
  * @returns {Number} Smallest number found

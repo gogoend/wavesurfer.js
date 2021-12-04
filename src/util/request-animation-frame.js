@@ -1,5 +1,6 @@
 /* eslint-disable valid-jsdoc */
 /**
+ * rAF Polyfill
  * Returns the `requestAnimationFrame` function for the browser, or a shim with
  * `setTimeout` if the function is not found
  *

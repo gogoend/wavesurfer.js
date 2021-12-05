@@ -364,7 +364,8 @@ export default class CanvasEntry {
             halfOffset - Math.round((peaks[2 * canvasStart] || 0) / absmaxHalf)
         );
 
-        // 绘制波形的上半部分
+        // 其实波形是一个闭合的形状，而不是一根线
+        // 绘制波形的上边缘
         let i, peak, h;
         for (i = canvasStart; i < canvasEnd; i++) {
             peak = peaks[2 * i] || 0;
@@ -372,7 +373,7 @@ export default class CanvasEntry {
             ctx.lineTo((i - first) * scale + this.halfPixel, halfOffset - h);
         }
 
-        // 上半部分绘制结束后，从后面绕过来继续绘制下半部分
+        // 上边缘绘制结束后，从后面绕过来继续绘制下边缘
         // draw the bottom edge going backwards, to make a single
         // closed hull to fill
         let j = canvasEnd - 1;

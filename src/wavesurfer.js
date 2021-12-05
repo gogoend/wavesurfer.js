@@ -261,6 +261,7 @@ export default class WaveSurfer extends util.Observer {
         cursorColor: '#333',
         cursorWidth: 1,
         dragSelection: true,
+        // 画布环境配置，相当于getContext的第二个参数
         drawingContextAttributes: {
             // Boolean that hints the user agent to reduce the latency
             // by desynchronizing the canvas paint cycle from the event
@@ -280,21 +281,28 @@ export default class WaveSurfer extends util.Observer {
         mediaContainer: null,
         mediaControls: false,
         mediaType: 'audio',
+        // 每秒钟对应的像素最小值
         minPxPerSec: 20,
         normalize: false,
+        // 提升大音频渲染速度
         partialRender: false,
         pixelRatio:
             window.devicePixelRatio || screen.deviceXDPI / screen.logicalXDPI,
         plugins: [],
         progressColor: '#555',
         removeMediaElementOnDestroy: true,
+        // 渲染器，默认MultiCanvas，可传入自己开发的渲染器
         renderer: MultiCanvas,
         responsive: false,
         rtl: false,
+        // 是否滚动父层级。不滚动的话波形将收缩在容器中
         scrollParent: false,
+        // 前进/后退长度（单位为秒）
         skipLength: 2,
+        // 是否分声道渲染
         splitChannels: false,
         splitChannelsOptions: {
+            // 声道是否相互覆盖 - 否的话将渲染到两行
             overlay: false,
             channelColors: {},
             filterChannels: [],
@@ -302,6 +310,7 @@ export default class WaveSurfer extends util.Observer {
         },
         vertical: false,
         waveColor: '#999',
+        // 网络请求配置
         xhr: {}
     };
 
@@ -1104,6 +1113,9 @@ export default class WaveSurfer extends util.Observer {
      *
      * Filters must be set with setFilters method first
      *
+     * 获得已设置过的滤镜数组
+     * 滤镜应当通过setFilters方法来设置
+     *
      * @return {array} List of enabled filters
      */
     getFilters() {
@@ -1746,6 +1758,7 @@ export default class WaveSurfer extends util.Observer {
 
     /**
      * Display empty waveform.
+     * 清空波形图
      */
     empty() {
         if (!this.backend.isPaused()) {
@@ -1757,6 +1770,7 @@ export default class WaveSurfer extends util.Observer {
         this.clearTmpEvents();
 
         // empty drawer
+        // 清空drawer
         this.drawer.progress(0);
         this.drawer.setWidth(0);
         this.drawer.drawPeaks({ length: this.drawer.getWidth() }, 0);

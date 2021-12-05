@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Load audio from URL
-    wavesurfer.load('../media/demo.wav');
+    wavesurfer.load('./demo-test.wav');
 
     // Play button
     const button = document.querySelector('[data-action="play"]');

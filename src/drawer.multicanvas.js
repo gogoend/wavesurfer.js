@@ -284,6 +284,7 @@ export default class MultiCanvas extends Drawer {
             start,
             end,
             ({ absmax, hasMinVals, height, offsetY, halfH, peaks, channelIndex: ch }) => {
+                // prepareDraw中的其它逻辑执行完后将执行这里
                 // if drawBars was called within ws.empty we don't pass a start and
                 // don't want anything to happen
                 if (start === undefined) {
@@ -352,6 +353,9 @@ export default class MultiCanvas extends Drawer {
             start,
             end,
             ({ absmax, hasMinVals, height, offsetY, halfH, peaks, channelIndex }) => {
+                // prepareDraw中的其它逻辑执行完后将执行这里
+
+                // 对称对声道进行对称处理？
                 if (!hasMinVals) {
                     const reflectedPeaks = [];
                     const len = peaks.length;
@@ -365,6 +369,7 @@ export default class MultiCanvas extends Drawer {
 
                 // if drawWave was called within ws.empty we don't pass a start and
                 // end and simply want a flat line
+                // 如果是通过WaveSurfer实例的empty（清空）方法调用绘图函数，此时是不传入start值的，就不必再绘制波形了
                 if (start !== undefined) {
                     this.drawLine(peaks, absmax, halfH, offsetY, start, end, channelIndex);
                 }
@@ -398,8 +403,11 @@ export default class MultiCanvas extends Drawer {
     drawLine(peaks, absmax, halfH, offsetY, start, end, channelIndex) {
         const { waveColor, progressColor } = this.params.splitChannelsOptions.channelColors[channelIndex] || {};
         this.canvases.forEach((entry, i) => {
+            // 设置填充样式
             this.setFillStyles(entry, waveColor, progressColor);
+            // 设置变换
             this.applyCanvasTransforms(entry, this.params.vertical);
+            // 画线
             entry.drawLines(peaks, absmax, halfH, offsetY, start, end);
         });
     }
@@ -464,6 +472,7 @@ export default class MultiCanvas extends Drawer {
     /**
      * Performs preparation tasks and calculations which are shared by `drawBars`
      * and `drawWave`
+     * 做一些由`drawBars`和共享的`drawWave`前置任务与计算
      *
      * @param {number[]|Number.<Array[]>} peaks Can also be an array of arrays for
      * split channel rendering
@@ -479,7 +488,7 @@ export default class MultiCanvas extends Drawer {
      * @returns {void}
      */
     prepareDraw(peaks, channelIndex, start, end, fn, drawIndex, normalizedMax) {
-        // 这里是requestAnimationFrame里的逻辑
+        // util.frame的函数中其实是requestAnimationFrame里的逻辑
         return util.frame(() => {
             // Split channels and call this function with the channelIndex set
             // 分离通道走这里
@@ -519,6 +528,8 @@ export default class MultiCanvas extends Drawer {
                 return;
             }
 
+            // TODO: 计算最大调制值？
+            // 从barHeight获取，如果normalize=true就从peak数组中找绝对值最大的值
             // calculate maximum modulation value, either from the barHeight
             // parameter or if normalize=true from the largest value in the peak
             // set
@@ -527,12 +538,16 @@ export default class MultiCanvas extends Drawer {
                 absmax = normalizedMax === undefined ? util.absMax(peaks) : normalizedMax;
             }
 
+            // TODO: ？？？
             // Bar wave draws the bottom only as a reflection of the top,
             // so we don't need negative values
             const hasMinVals = [].some.call(peaks, val => val < 0);
+            // 高度 = 自己设定的高度 x 像素比
             const height = this.params.height * this.params.pixelRatio;
+            // 得出一半高度，用以确定中线
             const halfH = height / 2;
 
+            // drawIndex指的是正在绘制的声道的索引
             let offsetY = height * drawIndex || 0;
 
             // Override offsetY if overlay is true

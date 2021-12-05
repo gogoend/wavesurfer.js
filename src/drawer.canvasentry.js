@@ -70,6 +70,7 @@ export default class CanvasEntry {
 
     /**
      * Store the wave canvas element and create the 2D rendering context
+     * 存储canvas元素以及获取到的canvas绘图环境
      *
      * @param {HTMLCanvasElement} element The wave `canvas` element.
      */
@@ -122,6 +123,7 @@ export default class CanvasEntry {
 
     /**
      * Clear the wave and progress rendering contexts
+     * 清除绘制好的波形与进度条
      */
     clearWave() {
         // wave
@@ -160,6 +162,7 @@ export default class CanvasEntry {
 
     /**
      * Utility function to handle wave color arguments
+     * 获取颜色参数；如果传入的颜色是一个字符串，直接原样返回；如果是字符串数组，就返回渐变色
      *
      * When the color argument type is a string, it will be returned as is.
      * Otherwise, it will be treated as an array, and a canvas gradient will
@@ -183,12 +186,15 @@ export default class CanvasEntry {
 
     /**
      * Set the canvas transforms for wave and progress
+     * 设置peak图与进度条的变换
      *
      * @param {boolean} vertical Whether to render vertically
      */
     applyCanvasTransforms(vertical) {
+        // 如果是垂直渲染，则需要对波形图做一些变换
         if (vertical) {
             // Reflect the waveform across the line y = -x
+            // 沿着 ‘\’ 方向对称波形
             this.waveCtx.setTransform(0, 1, 1, 0, 0, 0);
 
             if (this.hasProgressCanvas) {
@@ -245,6 +251,7 @@ export default class CanvasEntry {
 
     /**
      * Draw a rounded rectangle on Canvas
+     * 在canvas上绘制圆角矩形
      *
      * @param {CanvasRenderingContext2D} ctx Canvas context
      * @param {number} x X-position of the rectangle
@@ -298,6 +305,7 @@ export default class CanvasEntry {
      * should be rendered
      */
     drawLines(peaks, absmax, halfH, offsetY, start, end) {
+        // 绘制peak本身
         this.drawLineToContext(
             this.waveCtx,
             peaks,
@@ -308,6 +316,7 @@ export default class CanvasEntry {
             end
         );
 
+        // 绘制进度条
         if (this.hasProgressCanvas) {
             this.drawLineToContext(
                 this.progressCtx,
@@ -323,7 +332,7 @@ export default class CanvasEntry {
 
     /**
      * Render the actual waveform line on a `canvas` element
-     * CanvasContext 相关API都在此被调用
+     * drawLine过程中，CanvasContext 相关API都在此被调用
      *
      * @param {CanvasRenderingContext2D} ctx Rendering context of target canvas
      * @param {number[]} peaks Array with peaks data
@@ -396,6 +405,7 @@ export default class CanvasEntry {
 
     /**
      * Destroys this entry
+     * 销毁该entry
      */
     destroy() {
         this.waveCtx = null;

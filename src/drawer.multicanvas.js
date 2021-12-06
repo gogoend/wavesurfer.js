@@ -528,13 +528,24 @@ export default class MultiCanvas extends Drawer {
                 return;
             }
 
-            // TODO: 计算最大调制值？
-            // 从barHeight获取，如果normalize=true就从peak数组中找绝对值最大的值
+            // 计算最大调制值，如图：
+            //
+            // |+absmax
+            // | /\                  /\
+            // |/  \    /\          /  \    /\
+            // |----\--/--\/\----/\/----\--/--\--/------
+            // |     \/      \  /        \/    \/
+            // |              \/
+            // |-absmax
+            //
+            // 也就是计算y轴的坐标系最大值的区间；绘图将钳制在这一范围内
             // calculate maximum modulation value, either from the barHeight
             // parameter or if normalize=true from the largest value in the peak
             // set
+            // 默认从barHeight获取；barHeight为默认值的情况下，absmax值为1
             let absmax = 1 / this.params.barHeight;
             if (this.params.normalize) {
+                // 如果设置了归一化，就从peak数组中找绝对值最大的值来置为“1”
                 absmax = normalizedMax === undefined ? util.absMax(peaks) : normalizedMax;
             }
 

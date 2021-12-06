@@ -378,7 +378,7 @@ export default class CanvasEntry {
         let i, peak, h;
         for (i = canvasStart; i < canvasEnd; i++) {
             peak = peaks[2 * i] || 0;
-            h = Math.round(peak / absmaxHalf); // 这个应该是高度
+            h = Math.round(peak / absmaxHalf); // 当前波形对应到canvas上的高度
             ctx.lineTo((i - first) * scale + this.halfPixel, halfOffset - h);
         }
 

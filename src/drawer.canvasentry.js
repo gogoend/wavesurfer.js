@@ -378,7 +378,8 @@ export default class CanvasEntry {
         let i, peak, h;
         for (i = canvasStart; i < canvasEnd; i++) {
             peak = peaks[2 * i] || 0;
-            h = Math.round(peak / absmaxHalf); // 当前波形对应到canvas上的高度
+            h = Math.round(peak / absmaxHalf); // 当前波形对应到canvas上的、相对y轴中线的高度；算出来可能为负值，即在中线之上还是中线之下
+            // y值：高度位置，相对y轴中线
             ctx.lineTo((i - first) * scale + this.halfPixel, halfOffset - h);
         }
 
